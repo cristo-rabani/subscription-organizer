@@ -8,7 +8,7 @@ Thus, after user is subscribed you can subscribe for his avatar.
 
 ## Instalation
 ```sh
-$ meteor add universe:i18n
+$ meteor add cristo:subscription-improver
 ```
 
 ## Motivation
