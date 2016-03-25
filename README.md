@@ -6,6 +6,11 @@ Additionally any subscription is cached for while before will be really stopped,
 This package brings possibility of making additional subscription under subscriptions.
 Thus, after user is subscribed you can subscribe for his avatar.
 
+## Instalation
+```sh
+$ meteor add universe:i18n
+```
+
 ## Motivation
 Implemented because any other packages for subscriptions disappointed me.
 
