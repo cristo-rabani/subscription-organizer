@@ -1,4 +1,4 @@
-# Subscription Improver
+# Subscription Organizer
 Normally you invoke subscriptions inside the template level and you use many times this template
 subscriptions will rerun again etc. Subscription Improver will share same subscriptions between many views or/and places.
 Additionally any subscription is cached for while before will be really stopped, so any resubscribtion is fast.
@@ -8,7 +8,7 @@ Thus, after user is subscribed you can subscribe for his avatar.
 
 ## Instalation
 ```sh
-$ meteor add cristo:subscription-improver
+$ meteor add cristo:subscription-organizer
 ```
 
 ## Motivation
@@ -19,9 +19,9 @@ Implemented because any other packages for subscriptions disappointed me.
 ### Memoize subscriptions
 
 ```js
-const h1 = SubscriptionImprover.subscribe('test', {a:1, b:2});
-const h2 = SubscriptionImprover.subscribe('test', {a:1, b:2});
-const h3 = SubscriptionImprover.subscribe('test', {a:1, b:2});
+const h1 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
+const h2 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
+const h3 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
 
 // Only onetime it will be subscribed (h1 === h2 === h3)
 
@@ -34,15 +34,15 @@ h2.stop(); //Subscription will be stopped soon
 ### Dependant subscriptions
 
 ```js
-const h1 = SubscriptionImprover.subscribe('user', 'afaf123');
+const h1 = SubscriptionOrganizer.subscribe('user', 'afaf123');
 // this autorun will be launched when h1 will be ready
 h1.autorun(function () {
     const user = userMeteor.users.findOne();
     //following subscriptions will stopped after h1
     this.subscribe('avatar', user.avatarId);
-    SubscriptionImprover.subscribe('user', user.friendId);
+    SubscriptionOrganizer.subscribe('user', user.friendId);
 });
-const h2 = SubscriptionImprover.subscribe('test', {a:1, b:2});
+const h2 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
 
 // Only onetime it will be subscribed (h1 === h2 === h3)
 
@@ -58,12 +58,12 @@ After that, this subscription will passed to stopping.
 As a default stopping of subscription will wait one minute before subscription will be really stopped.
 
 ```js
-const h1 = SubscriptionImprover.subscribe('test', {a:1, b:2});
+const h1 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
 h1.stop();
 
 Meteor.setTimeout(function () {
     // reusing old subscription and clear the timeout to stopping
-    const h2 = SubscriptionImprover.subscribe('test', {a:1, b:2});
+    const h2 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
 }, 30000);
 
 ```
@@ -71,8 +71,8 @@ Meteor.setTimeout(function () {
 increase or decrease timeout to stop
 
 ```js
-SubscriptionImprover.setConfig({waitTimeUntilUnsubscribe: 0});
-const h1 = SubscriptionImprover.subscribe('test', {a:1, b:2});
+SubscriptionOrganizer.setConfig({waitTimeUntilUnsubscribe: 0});
+const h1 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
 h1.stop(); //will be stop (but async)
 
 ```
@@ -80,8 +80,8 @@ h1.stop(); //will be stop (but async)
 ### Subscription count
 
 ```js
-const h1 = SubscriptionImprover.subscribe('test', {a:1, b:2});
-const h2 = SubscriptionImprover.subscribe('test', {a:1, b:2});
+const h1 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
+const h2 = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
  //reactive data source
 h1.count(); //output: 2
 ```
@@ -89,7 +89,7 @@ h1.count(); //output: 2
 ### Many instances
 
 ```js
-const mySubsImprover = new SubscriptionImprover({waitTimeUntilUnsubscribe = 60000, connection = Meteor.connection});
+const mySubsImprover = new SubscriptionOrganizer({waitTimeUntilUnsubscribe = 60000, connection = Meteor.connection});
 const h1 = mySubsImprover.subscribe('test', {a:1, b:2});
 ```
 
@@ -102,7 +102,7 @@ within autorun
 Template.someView.onCreated(function(){
     this.autorun(function() {
         var data = Template.currentData();
-        SubscriptionImprover.subscribe('test', data._id);
+        SubscriptionOrganizer.subscribe('test', data._id);
     });
 });
 
@@ -113,7 +113,7 @@ without autorun
 ```js
 
 Template.someView.onCreated(function(){
-    this.mySub = SubscriptionImprover.subscribe('test', {a:1, b:2});
+    this.mySub = SubscriptionOrganizer.subscribe('test', {a:1, b:2});
 });
 
 Template.someView.onDestroyed(function(){

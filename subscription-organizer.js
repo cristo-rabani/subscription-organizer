@@ -1,4 +1,4 @@
-SubscriptionImprover = function ({connection = Meteor.connection, waitTimeUntilUnsubscribe = 60000} = {}) {
+SubscriptionOrganizer = function ({connection = Meteor.connection, waitTimeUntilUnsubscribe = 60000} = {}) {
     const _subs = {};
     let _timeOut = waitTimeUntilUnsubscribe;
     let _connection = connection;
@@ -30,7 +30,7 @@ SubscriptionImprover = function ({connection = Meteor.connection, waitTimeUntilU
         _subs[key].autorun = func => {
             _subs[key]._tasks.push(Tracker.autorun(computation => {
                 if (_subs[key].ready()) {
-                    func.call(SubscriptionImprover, _subs[key], computation)
+                    func.call(SubscriptionOrganizer, _subs[key], computation)
                 }
             }));
         };
@@ -63,4 +63,10 @@ SubscriptionImprover = function ({connection = Meteor.connection, waitTimeUntilU
 };
 
 
-Object.assign(SubscriptionImprover, new SubscriptionImprover());
+Object.assign(SubscriptionOrganizer, new SubscriptionOrganizer());
+
+/**
+ * @deprecated please use SubscriptionOrganizer instead
+ * @type {SubscriptionOrganizer}
+ */
+SubscriptionImprover = SubscriptionOrganizer;
