@@ -89,7 +89,7 @@ h1.count(); //output: 2
 ### Many instances
 
 ```js
-const mySubsImprover = new SubscriptionOrganizer({waitTimeUntilUnsubscribe = 60000, connection = Meteor.connection});
+const mySubsImprover = new SubscriptionOrganizer({waitTimeUntilUnsubscribe: 60000, connection: Meteor.connection});
 const h1 = mySubsImprover.subscribe('test', {a:1, b:2});
 ```
 
