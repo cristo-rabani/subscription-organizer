@@ -30,10 +30,11 @@ SubscriptionOrganizer = function ({connection = Meteor.connection, waitTimeUntil
         _subs[key].autorun = func => {
             _subs[key]._tasks.push(Tracker.autorun(computation => {
                 if (_subs[key].ready()) {
-                    func.call(SubscriptionOrganizer, _subs[key], computation)
+                    func.call(this, _subs[key], computation)
                 }
             }));
         };
+
         _subs[key].stop = () => {
             _subs[key]._count--;
             if (_subs[key]._countDeps) {
@@ -48,6 +49,21 @@ SubscriptionOrganizer = function ({connection = Meteor.connection, waitTimeUntil
                     }
                 }, _timeOut);
             }
+        };
+
+        _subs[key].clear = () => {
+            if (typeof _subs[key]._tId !== 'undefined') {
+                Meteor.clearTimeout(_subs[key]._tId);
+                delete _subs[key]._tId;
+            }
+            _subs[key]._count = 0;
+            if (_subs[key]._countDeps) {
+                _subs[key]._countDeps.changed();
+            }
+            _subs[key]._tasks.forEach(computation => computation.stop());
+            _subs[key]._stop();
+            delete _subs[key];
+
         };
         return _subs[key];
     }
